@@ -58,6 +58,8 @@ The are template placeholders and will be replaced when launching the editor/app
 - `{directory}` (fully qualified)
 - `{line}` (number)
 - `{column}` (number)
+- `{project_dir}` (fully qualified) directory containing active .sublime-project file
+- `{project}` (fully qualified) path of active .sublime-project file itself
 
 ### Example
 
@@ -71,9 +73,24 @@ The are template placeholders and will be replaced when launching the editor/app
       "command": ["/usr/local/bin/idea", "{filename}:{line}"]
     },
     {
+      "name": "VSCode",
+      "command":
+      ["/usr/local/bin/code", "-n", "{filename}"]
+    },
+    {
+      "name": "VSCode (file with project)",
+      "command":
+      ["/usr/local/bin/code", "-n", "{project_dir}", "{filename}"]
+    },
+    {
+      "name": "VSCode (project only)",
+      "command":
+      ["/usr/local/bin/code", "-n", "{project_dir}"]
+    },
+    {
       "name": "NeoVim",
       "command":
-      ["/usr/local/Cellar/neovim-dot-app/HEAD/bin/gnvim", "{filename}", "+{line}"],
+      ["/usr/local/Cellar/neovim-dot-app/HEAD/bin/gnvim", "{filename}", "+{line}"]
     },
     {
       "name": "MacVim",
