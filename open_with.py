@@ -54,7 +54,9 @@ class OpenWithCommand(sublime_plugin.WindowCommand):
             'line': line + 1,
             'column': column + 1,
             'filename': filename,
-            'directory': os.path.dirname(filename)
+            'directory': os.path.dirname(filename),
+            'project': self.window.project_file_name(),
+            'project_dir': os.path.dirname(self.window.project_file_name())
         }
 
         self._run(app.get('command'), variables)
