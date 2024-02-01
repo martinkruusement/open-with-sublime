@@ -53,13 +53,36 @@ To add your own editor, add the following settings.
 
 #### Variables/Placeholder:
 The are template placeholders and will be replaced when launching the editor/application.
+All paths are absolute paths.
 
-- `{filename}` (fully qualified)
-- `{directory}` (fully qualified)
-- `{line}` (number)
-- `{column}` (number)
-- `{project_dir}` (fully qualified) directory containing active .sublime-project file
-- `{project}` (fully qualified) path of active .sublime-project file itself
+- `{filename}` (absolute path to the current open file)
+- `{directory}` (of the current file)
+- `{line}` (number - cursor location)
+- `{column}` (number - cursor location)
+- `{project}` (directory containing the active .sublime-project file or any of the fallback options)
+- `{any_project}` (closest parent directory that contains a .sublime-project file even it's not currently open)
+- `{package}` (closest parent directory that has a package.json file)
+- `{git}` (closest parent directory that is a git repository)
+
+#### Fallbacks
+> **(!) Fallbacks are only applied to the `{project}` variable and only used when there's no active project**.
+> 
+> This allows you to still use the `{project}` variable and have it automatically find the root of your project without having to hardcode paths in your configuration if you're not using projects.
+
+All fallbacks are active by default and processed in the following order:
+
+- `"any_project"` closest parent folder that contains any `.sublime-project` file
+- `"package"` closest parent folder that contains a `package.json` file
+- `"git"` closest parent folder that has a `git` directory
+
+To disable all fallbacks:
+`"disabled_fallbacks": ["any_project", "package", "git"]`
+
+#### Debug mode
+Setting `"debug": true` for an entry will print extra output to the Sublime console.
+
+Go to `View -> Show Console` to see it.
+
 
 ### Example
 
@@ -75,17 +98,24 @@ The are template placeholders and will be replaced when launching the editor/app
     {
       "name": "VSCode",
       "command":
-      ["/usr/local/bin/code", "-n", "{filename}"]
+      ["/usr/local/bin/code", "--goto", "{filename}:{line}:{column}"]
     },
     {
       "name": "VSCode (file with project)",
       "command":
-      ["/usr/local/bin/code", "-n", "{project_dir}", "{filename}"]
+      ["/usr/local/bin/code", "-n", "{project}", "--goto", "{filename}:{line}:{column}"]
     },
     {
       "name": "VSCode (project only)",
       "command":
-      ["/usr/local/bin/code", "-n", "{project_dir}"]
+      ["/usr/local/bin/code", "-n", "{project}"]
+    },
+    {
+      "name": "VSCode (no fallbacks, enable Debug mode)",
+      "debug": true,
+      "disabled_fallbacks": ["any_project", "package", "git"],
+      "command":
+      ["/usr/local/bin/code", "-n", "{project}", "--goto", "{filename}:{line}:{column}"]
     },
     {
       "name": "NeoVim",
